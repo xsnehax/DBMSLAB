@@ -92,3 +92,42 @@ update incentives set incentive_date='25-12-2021' where empno='3';
 select distinct e.ename,d.dname,a.job_role
 from employee e, dept d, assigned_to a, incentives i
 where e.empno=a.empno and e.empno=i.empno and e.deptno=d.deptno and i.incentive_amount=(select max(incentive_amount) from incentives i where i.incentive_date between '01-01-2021' and '31-12-2021');
+
+update employee set mgr_no='3' where empno='1';
+update employee set mgr_no='3' where empno='10';
+update employee set mgr_no='3' where empno='2';
+update employee set mgr_no='3' where empno='4';
+update employee set mgr_no='3' where empno='5';
+update employee set mgr_no='3' where empno='6';
+update employee set mgr_no='3' where empno='7';
+
+select m.ename, count(*)
+from employee e,employee m
+where e.mgr_no = m.empno
+group by m.ename
+having count(*) =(select MAX(mycount)
+from (select COUNT(*) mycount
+from employee
+group by mgr_no) a);
+                      
+insert into employee values('8','Shweta',NULL,'05-01-2018','60000','2'),('9','Shreya',NULL,'25-11-2019','30000','1'),
+('10','Arjun',NULL,'05-12-2019','15000','1');
+
+select *
+from employee e1
+where sal>(select avg(sal) from employee e where e1.deptno=e.deptno) and e1.mgr_no is NULL;
+
+select ename from employee where empno in(select distinct
+mgr_no from employee);
+
+insert into incentives values('6','11-01-2019','15000'),('5','18-01-2019','10000');
+
+select *
+from employee e,incentives i
+where e.empno=i.empno and i.incentive_date like "%01-2019"and 2=(select count(*) from incentives j where i.incentive_amount<j.incentive_amount and incentive_date between '01-01-2019' and '31-01-2019');
+   
+select *
+from employee e
+where deptno=(select deptno from employee where empno=e.mgr_no);
+
+
